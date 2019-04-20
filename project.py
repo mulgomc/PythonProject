@@ -79,6 +79,43 @@ def read_file():
         else:
             result.append(line)
     db_data = result
+
+# 최초 파일 DB update(by bong)
+read_file()
+
+# for 'cmd M' function(by bong)
+def find_in_sublists(lst, value):
+    for sub_i, sublist in enumerate(lst):
+        try:
+            global f_M
+            f_M= [sub_i, sublist.index(value)]
+            return f_M
+        except ValueError:
+            pass
+
+    raise ValueError('%s is not in lists' % value)
+
+# for 'cmd R' parse function (by bong)
+def R_parse_file(num, line):    
+    R_temp = []
+    R_chk = 0
+    try:        
+        R_temp.append(int(line[0])); R_chk+=1        
+        R_temp.append(str(line[1])); R_chk+=1        
+        R_temp.append(str(line[2])); R_chk+=1        
+        R_temp.append(int(line[3].split('-')[0]))
+        R_temp.append(int(line[3].split('-')[1]))
+        R_temp.append(int(line[3].split('-')[2])); R_chk+=1  
+    except:
+        print_format_error(num, R_chk)
+        return [-1]
+    
+    if not valid_date(R_temp[3], R_temp[4], R_temp[5]):
+        print_data_error(num, 3)
+        return [-1]
+  
+    return R_temp
+
 #사용자로부터 적합한 명령 입력을 요구하는 함수
 def input_cmd():
     while True:
@@ -98,17 +135,43 @@ def pcs_d():
     print("Process D")
 def pcs_f():
     print("Process F")
+# modify (by bong)
 def pcs_m():
     print("Process M")
-def pcs_p():
-    print("Process P")
-    #테스트용 대충 인쇄
+    modify_idORname=str(input("Enter the id or name that you want to modify score : "))
+    modify_ctg=input("1. 중간고사 \n2. 기말고사 \nEnter the number you want to modify score : ")
+    modify_score=int(input("Enter the score you want to input : "))
+    while (modify_idORname not in [j for i in db_data for j in i]):
+        print("Your first input data is not right")
+        break
+    find_in_sublists(db_data,modify_idORname)
+    if modify_ctg in ["1","2"]:
+        if modify_ctg=="1":
+            modify_ctg_idx=6
+        else:
+            modify_ctg_idx=7
+    else:
+        print("Your second input data is not right")
+    db_data[f_M[0]][modify_ctg_idx]=modify_score
     for i in db_data:
         print(i)
+# print (by bong)
+def pcs_p():
+    print("Process P")
+    for i in db_data:
+        print(i)
+# read (by bong) 파일내용이 [순번, id, 이름, 생년월일]로 구성
 def pcs_r():
     print("Process R")
-    #테스트용 대충 읽기
-    read_file()
+    AppendData=NewResult=[]
+    with open(input("Enter the file name : "), 'r') as f:
+        AppendData=f.readlines()
+    for num, i in zip(range(len(AppendData)),AppendData):
+        newline=R_parse_file(num+1, i.replace('\n',"").split('\t'))   
+        if newline==[-1]:
+            return [-1]
+        else:
+            db_data.append(newline)
 def pcs_s():
     print("Process S")
 def pcs_q():
