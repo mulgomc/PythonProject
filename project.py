@@ -173,12 +173,66 @@ def pcs_r():
         else:
             db_data.append(newline)
 def pcs_s():
-    print("Process S")
+    print("Process s")
+    f_data = result = []    
+    global db_data
+    try:
+        with open('data.txt', 'r') as f:
+            f_data = f.readlines()
+    except:
+        print('Could not open file.')
+    for num, i in zip(range(len(f_data)), f_data):        
+        line = parse_file(num+1, i.replace('\n',"").split('\t'))   
+        if line==[-1]:
+            return [-1]
+        else:
+            result.append(line)
+    print(db_data)
+        #Get Sort Criterian    
+    input_a = input("정렬 기준을 선택해주세요(1.이름,2.평균점수,3.Grade) : ")
+    try:
+        if int(input_a[0]) == 1:
+            print("************************************이름순으로 정렬하겠습니다.************************************")
+            print("  일련번호      학생id        이름       생년월일          중간고사    기말고사     평 균     등급 ")
+            db_data1 = sorted(db_data, key = lambda x : x[2])
+            for i in range(num):                
+                print("%10s"%"     {:>3}     {}      {}     {}.{:>2}.{:>2}      {:>6}     {:>6}        {:.1f}   {:>6}"
+                  .format(db_data1[i][0], db_data1[i][1], db_data1[i][2], db_data1[i][3], db_data1[i][4],db_data1[i][5],db_data1[i][6],db_data1[i][7],db_data1[i][7],db_data1[i][7]))
+          
+        elif int(input_a[0]) == 2:
+            print("************************************평균점수순으로 정렬하겠습니다.************************************")
+            print("  일련번호      학생id        이름       생년월일          중간고사    기말고사     평 균     등급 ")
+            db_data1 = sorted(db_data, key = lambda x : x[6],reverse=True)
+            for i in range(num):                
+                print("%10s"%"     {:>3}     {}      {}     {}.{:>2}.{:>2}      {:>6}     {:>6}        {:.1f}   {:>6}"
+                  .format(db_data1[i][0], db_data1[i][1], db_data1[i][2], db_data1[i][3], db_data1[i][4],db_data1[i][5],db_data1[i][6],db_data1[i][7],db_data1[i][7],db_data1[i][7]))
+          
+        elif int(input_a[0]) == 3:
+            print("************************************Grade순으로 정렬하겠습니다.***********************************")
+            print("  일련번호      학생id        이름       생년월일          중간고사    기말고사     평 균     등급 ")
+            db_data1 = sorted(db_data, key = lambda x : x[7])
+            for i in range(num):                
+                print("%10s"%"     {:>3}     {}      {}     {}.{:>2}.{:>2}      {:>6}     {:>6}        {:.1f}   {:>6}"
+                  .format(db_data1[i][0], db_data1[i][1], db_data1[i][2], db_data1[i][3], db_data1[i][4],db_data1[i][5],db_data1[i][6],db_data1[i][7],db_data1[i][7],db_data1[i][7]))
+        else:
+            print("1~3번까지 숫자만 선택 가능합니다.")
+    except:
+        print("오류입니다. 1~3번까지 숫자만 선택 가능합니다.")
 def pcs_q():
     print("Process Q")
+    print("Bye!")
 def pcs_w():
     print("Process W")
-
+    try:
+        with open('report.txt', 'w') as f2:
+            print("***********************************************성 적 표***********************************************", file = f2)
+            print("  일련번호  학생id         이름       생년월일          중간고사    기말고사     평 균     등급 ", file = f2)
+            for i in range(len(db_data)):         
+                print("   {:>4}     {:^10}      {}     {}.{:>3}.{:>3}       {:>6}         {:>6}         {:.1f}    {:>8}"
+                    .format(db_data[i][0], db_data[i][1], db_data[i][2], db_data[i][3], db_data[i][4],db_data[i][5],db_data[i][6],db_data[i][7],db_data[i][7],db_data[i][7]), file = f2)
+        print("The file has been saved to 'report.txt'.")
+    except:
+        print('Could not save file.')
 while True:
     cmd = input_cmd()
     if cmd == 'A':
