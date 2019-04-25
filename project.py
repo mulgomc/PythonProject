@@ -155,9 +155,7 @@ def pcs_s():
             print("1~3번까지 숫자만 선택 가능합니다.")
     except:
         print("오류입니다. 1~3번까지 숫자만 선택 가능합니다.")
-def pcs_q():
-    print("Process Q")
-    print("Bye!")
+
 def pcs_w():
     print("Process W")
     try:
